@@ -1,0 +1,32 @@
+﻿@model IEnumerable<AspTask.Models.Post>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container mt-5">
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">No posts available.</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var post in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">@post.Title</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@post.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+

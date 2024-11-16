@@ -1,0 +1,22 @@
+﻿<div id="deletePostModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Are you sure need to delete post?</label>
+                <form class="form-inline" asp-controller="Posts" asp-action="Delete" method="post" role="form">
+                    <input type="hidden" class="form-control" id="post-id" name="id">
+                    <div class="d-flex justify-content-between w-100">
+                        <button type="submit" class="btn default-btn p-1 m-2">Delete</button>
+                        <button type="button" class="btn-custom btn btn-primary p-1 m-2" id="hide-delete-modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

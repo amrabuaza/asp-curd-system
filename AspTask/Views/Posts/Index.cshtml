@@ -1,0 +1,45 @@
+﻿@model IEnumerable<AspTask.Models.Post>
+
+@{
+    ViewData["Title"] = "Manage Posts";
+}
+
+<div id="manage-posts">
+    <section class="mt-4 mb-4">
+        <div class="d-flex justify-content-center">
+            <h2>Manage Posts</h2>
+        </div>
+        <button id="createPostBtn" class="btn btn-primary">Create Post</button>
+        <partial name="Partials/_ConfirmDelete" />
+        <partial name="Partials/_PostForm" />
+        <partial name="Partials/_EditPost" />
+    </section>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>IsActive</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Post post in Model)
+            {
+                <tr>
+                    <td>@post.Title</td>
+                    <td>@post.Description</td>
+                    <td>@(post.IsActive ? "Active" : "Inactive")</td>
+                    <td>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <i class="bi bi-archive delete-post-button" data-target-post-id="@post.Id" title="Delete"></i>
+                                <i class="bi bi-pencil edit-post-button ml-2" data-target-post-id="@post.Id" title="Edit"></i>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,26 @@
+﻿@using AspTask.Models
+@model User
+
+<div class="container account-panel mt-5">
+    <form asp-controller="Account" asp-action="Login" method="post" role="form" class="p-4">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label asp-for="@Model.Username" class="control-label">Username</label>
+            <input asp-for="@Model.Username" class="form-control input-sm" />
+            <span asp-validation-for="@Model.Username" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+
+            <label asp-for="@Model.Password" class="control-label">Password</label>
+
+            <input asp-for="@Model.Password" class="form-control input-sm" type="password" />
+
+            <span asp-validation-for="@Model.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Login" class="btn default-btn mt-4" />
+        </div>
+    </form>
+</div>

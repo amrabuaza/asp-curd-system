@@ -1,0 +1,35 @@
+﻿@using AspTask.Models
+@model User
+
+
+<div class="container account-panel mt-5">
+    @if (!String.IsNullOrEmpty(@ViewBag.errorMessage))
+    {
+        <div class="d-flex pt-4">
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.errorMessage
+            </div>
+        </div>
+    }
+    <form asp-controller="Account" asp-action="Signup" method="post" role="form" class="p-4">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label asp-for="@Model.Username" class="control-label">Username</label>
+            <input asp-for="@Model.Username" class="form-control input-sm" />
+            <span asp-validation-for="@Model.Username" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+
+            <label asp-for="@Model.Password" class="control-label">Password</label>
+
+            <input asp-for="@Model.Password" class="form-control input-sm" type="password" />
+
+            <span asp-validation-for="@Model.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Signup" class="btn default-btn mt-4" />
+        </div>
+    </form>
+</div>

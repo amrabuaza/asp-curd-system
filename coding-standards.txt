@@ -1,0 +1,136 @@
+Document Purpose
+This documents specifies standards, rules and guidelines for development of all code and other constructs (database schemas, interface schemas, etc.) of ObjectMatch platform. ObjectMatch is relatively complex software solution, and it is anticipated that its development will take longer time, and include different teams; therefore, establishing these standards is of critical importance.
+Intended audience is the ObjectMatch development team – it is for internal use only. This document is not intended for partner development teams; separate document (ObjectMatch Developer Guidance) provides instructions targeted at this audience.
+Coding standards define a programming style, through comprehensive, language-specific rules that describe how software code should be written. Furthermore, following single set of naming standards and coding practices allows for uniform code developed by different team members, which in turns allows for greater legibility and easier understanding.
+Document Coverage
+This document covers the following areas:
+	•	Server-side Programmatic Code – all code, compiled in executed, that is targeting server (cloud) environments. This code is written in C#.
+Common Standards
+Definitions
+Naming Standards
+Common definition of pascal case, camel case and uppercase are provided below:
+	•	Pascal Case – the first letter in the identifier and the first letter of each subsequent concatenated word are capitalized. You can use pascal case for identifiers of three or more characters. In this document, pascal case is referred to as “PascalCase” to remove ambiguity.
+	•	Camel Case – the first letter of an identifier is lowercase, and the first letter of each subsequent concatenated word is capitalized. In this document, camel case is referred to as “camelCase”.
+	•	Uppercase - All letters of an identifier are capitalized. 
+Acronyms in Naming
+Two letter acronyms remain as either uppercase – e.g. “UN”, “US”.
+Three or more letter acronyms (initialisms) are given as first letter capitalized, remaining letters lowercase (for example, ISO becomes Iso, USA becomes Usa).
+Natural Language
+English language, United States (US) locale, is defined as language which has to be used for all server and client side programmatic code, including but not limited to file names, type identifiers, variables, comments, resource names, etc.
+
+Server-side Programmatic Code
+Programming Language
+All programmatic code is written in Microsoft C#. 
+Targeted .net Framework version is 4.6.
+Visual Studio version 2015 is to be used for all development purposes.
+File Naming and Organization
+Solution
+All projects will be created under single Visual Studio solution, named “ObjectMatch”.
+Project Organization
+Each type must be stored in its own .cs file. Name of the file needs to correspond, both in name and casing, to the type being defined. Exception are nested types (e.g. nested classes), where one .cs file may contain multiple types. However, it is still named after top-level type it defines.
+Do not prepend or append type name with type itself (e.g. if class name is “Person”, do not name the file “PersonClass.cs”, or “ClassPerson.cs”).
+Use of Directories
+Use directories within a project, to store source code files in sub-namespaces. Name of directory must correspond to name of sub-namespace.
+Definition of Classes
+Within the definition of a class, type elements need to be grouped using #region editor directive as follows:
+	•	Events under #region Events
+	•	Fields under #region Fields
+	•	Indexers under #region Indexers
+	•	Properties under #region Properties
+	•	Constructors under #region Constructors
+	•	Methods under #region Methods
+	•	Interface implementations under #region InterfaceName Members (where InterfaceName is to be replaced with non-fully qualified name of the interface being implemented)
+Class definitions must therefore follow this order of class members:
+	•	Events
+	•	Fields
+	•	Properties
+	•	Constructors
+	•	Methods
+	•	Interface definitions
+If there are no class members of certain type (e.g. no events), then specific region is omitted from the class definition – i.e. there are no empty regions defined.
+Indentations and New Lines
+To ensure consistency and legibility of code, Visual Studio C# editor should be set as follows for indentations and new lines:
+Indentations
+
+New Lines
+
+Naming Conventions
+Solutions and Projects
+Both solution and project names must be in PascalCase.
+Files
+All file names within the project must be in PascalCase. Additionally, files containing types (classes, interfaces, enumerations etc.) must be equal to the name of the type being defined.
+Identifiers
+All identifiers for types (classes, interfaces, structs, enums etc.) are to be defined in PascalCase (ModelElement, Person, etc.) Do not use type within type name (for example, do not name enumeration as “ValidValuesEnum” – where “Enum” is appended to enumeration name).
+All interface names must begin with capital “I” – e.g. ILocationProvider.
+All exception classes (those deriving from System.Exception), must end in “Exception”.
+Identifiers for fields within a class are to be prefixed with “m_”, followed with camelCase identifier (e.g. m_firstName).
+Properties, Methods and Events must be defined in PascalCase.
+Enumeration values must be defined in PascalCase.
+Resource identifiers (within .resx files) must be defined in PascalCase.
+Do not use underscore (“_”) as separator character. Instead, leverage either PascalCase or camelCase as per above guidance to compose identifiers of multiple words. Exceptions to this rule are:
+	•	Fields within a class which all begin with “m_” as per above guidance.
+	•	Resource identifiers which can use underscore if necessary (e.g. “ArgumentException_IntegerLessThanValueMessage”)
+Good Coding Practices
+This section specific generally accepted good coding practices which should be followed by all team members.
+Assembly Design
+Each assembly which is a class library (compiled into .dll), needs to be designed with clearly defined public interface – public interfaces and public classes. Remainder of the assembly, which is intended to implement the public interface, needs to be defined either as internal or private, depending on type in question. 
+Access Modifiers
+Do not rely on compiler defaults for access modifiers; always explicitly define access modifiers (public, private, protected) on all types and type members.
+As a general rule, minimal access required should be defined (prefer private or internal over public whenever possible). This keeps implementation internals private, and clearly defines assembly interface to calling assemblies.
+All fields within a class must be private. Under no circumstances should fields use other access modifiers (internal, public) – use properties to control access to the field. An exception to this rule are static fields.
+Accessing Static or Instance Members
+When accessing an instance class member within the class itself, always use this qualifier (e.g. “this.FirstName”).
+When accessing static class member, always use class name as qualifier (e.g. “Collection.MaxSize”), both within the class itself and in other classes.
+Input Validation
+As a general rule, all input is to be assumed invalid, until proven otherwise. This rule applies to following:
+	•	Arguments into methods;
+	•	Arguments (value) to Property setters;
+	•	Values received from the user, either as direct input or via web services;
+	•	Values read from configuration files.
+All public and protected methods within a class need to validate all provided inputs. If the given argument is not valid as per the expectation, appropriate System.ArgumentException needs to be thrown. Utilize ObjectMatch.Core.Throw helper class, implemented in ObjectMatch.Core assembly to perform basic validations and raise an exception if validations fail.
+Use regular expressions (regex) whenever string inputs need to be according to predefined pattern (e.g. SimpleIdentifier, QualifiedName). Test strings for length in other cases.
+Numerical arguments should be tested for range, whenever it makes sense to do so.
+Globalization and Localization
+All strings (and other resources) must be stored in appropriate .resx file. No strings which may be presented to any user, may be hardcoded in the C# code. This includes strings which are to be used as messages in exceptions.
+For storage of general purpose strings, create “StringsTable.resx” file in the assembly.
+Assembly Versioning
+All assemblies within the solution, shall share same version number. For this purpose, AssemblyVersionAttribute shall be defined within a file on Solution level, and will be linked to all projects.
+Assembly Signing
+All assemblies need to be signed with a shared private key, defined in ObjectMatch.DevKey.snk file. This key will be used for development and testing purposes only.
+Production code will be signed with separate key, defined in ObjectMatch.ProdKey.snk. Process of signing production code will be part of release management.
+Class Constructors
+Each class must have a constructor defined even if it is empty statement; this is to avoid compiler automatically generating one.
+Each definition of a constructor must explicitly designate which base class constructor is called; in most cases, this will be default one (specify “: base()”).
+Class Qualifiers
+If class is implemented purposely for inheritance and cannot be instantiated on its own, define class as abstract.
+On the other hand, if class is not explicitly intended to be inherited, mark it as sealed.
+Enumerations
+Each value of the enumeration should have explicit integer value assigned. First enumeration should have value 1, to avoid enumeration variable assuming this value if undefined.
+Specifying explicit enumeration value assignment allows for easier debugging as well as troubleshooting when serialization or deserialization (e.g. for database storage) is required.
+As a general rule, do not use any other underlying type for enumeration instead of System.Int32.
+Comments
+As a general rule, comment often and comment verbosely. English, US locale, is to be used for all comments.
+Use comments to add value to the context, do not comment obvious statements.
+To increase legibility of lengthy code files, use the following principles:
+	•	Finish type with corresponding //type comment:
+	•	class with //class comment
+	•	interface with //interface comment
+	•	struct with //struct comment
+	•	enum with //enum comment
+	•	Finish namespace with //namespace comment
+	•	Finish constructor definition with //.ctor() comment
+	•	Finish Property definition with //PropertyName definition (and //get as well as //set after getter/setter implementation, respectively)
+	•	Finish Indexer definition with //this[indexer type] (in case of integer, comment as //this[int])
+	•	Finish Method definition with //MethodName() definition (omit arguments, and if method is overloaded, use the same comment after each method)
+Each class must be commented (with ///) to include basic information about the purpose of the class. Within this comment, put your name as an author and subsequent owner of the class.
+Where something is to be done at later stage, to avoid being forgotten, place //TODO: comment, describing in brief what work is remaining (e.g. //TODO: Validate arguments).
+Resource Files
+For general purpose storage of string resources within an assembly (to avoid hardcoding of strings), use name StringsTable.resx.
+Syntactic Sugar Avoidance
+Auto Generated Fields
+Do not use auto generated fields:
+FirstName {get; set;}
+Implicitly Type Variables
+Do not use var for implicit type declaration of local variables; always explicitly define the type.
+
+
